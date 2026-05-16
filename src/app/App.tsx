@@ -11,16 +11,34 @@ import Room7OmegaCore from './components/Room7OmegaCore';
 import SuccessScreen from './components/SuccessScreen';
 
 export default function App() {
-  const [currentRoom, setCurrentRoom] = useState<number>(0);
-  const [username, setUsername] = useState('');
+  const [currentRoom, setCurrentRoom] = useState<number>(() => {
+    const saved = localStorage.getItem('omega_room');
+    return saved ? parseInt(saved, 10) : 0;
+  });
+  const [username, setUsername] = useState<string>(() => {
+    return localStorage.getItem('omega_username') || '';
+  });
 
   const handleStart = (user: string) => {
     setUsername(user);
+    localStorage.setItem('omega_username', user);
+    localStorage.setItem('omega_room', '1');
     setCurrentRoom(1);
   };
 
+  const handleRestart = () => {
+    localStorage.removeItem('omega_room');
+    localStorage.removeItem('omega_username');
+    setCurrentRoom(0);
+    setUsername('');
+  };
+
   const handleNextRoom = () => {
-    setCurrentRoom(prev => prev + 1);
+    setCurrentRoom(prev => {
+      const next = prev + 1;
+      localStorage.setItem('omega_room', String(next));
+      return next;
+    });
   };
 
   return (
@@ -162,7 +180,7 @@ export default function App() {
             transition={{ duration: 0.5 }}
             className="size-full"
           >
-            <SuccessScreen />
+            <SuccessScreen onRestart={handleRestart} />
           </motion.div>
         )}
       </AnimatePresence>

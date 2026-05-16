@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 
-export default function SuccessScreen() {
+export default function SuccessScreen({ onRestart }: { onRestart?: () => void }) {
   const [showStats, setShowStats] = useState(false);
 
   useEffect(() => {
@@ -147,7 +147,14 @@ export default function SuccessScreen() {
           }}
           className="text-green-400/50 font-mono text-xs sm:text-sm"
         >
-          Press F5 to restart mission
+          Press F5 or{' '}
+          <span
+            onClick={onRestart}
+            className="underline cursor-pointer hover:text-green-300"
+          >
+            click here
+          </span>{' '}
+          to restart mission
         </motion.p>
 
         {/* Grid effect */}
